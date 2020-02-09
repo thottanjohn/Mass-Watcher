@@ -214,6 +214,7 @@ gender_window = []
 # starting video streaming
 #cv2.namedWindow('window_frame')
 video_capture = cv2.VideoCapture(1)
+#video_capture = cv2.VideoCapture(0) if no other device selected ,In my case droid cam is device 0.
 """while(True):
     # Capture frame-by-frame
     ret, frame = video_capture.read()
