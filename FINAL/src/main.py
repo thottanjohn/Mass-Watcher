@@ -13,6 +13,7 @@ from req.inference import apply_offsets
 from req.inference import load_detection_model
 from req.preprocessor import preprocess_input
 
+#from numba import jit, cuda 
 
 #---------------------------- ROHAN'S CODE ---------------------------------
 
@@ -133,7 +134,7 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 tf.global_variables_initializer().run()
 
 saver = tf.train.Saver()
-SAVE_PATH = path + "/checkpoint/ver1.0_iteration.64000.ckpt"
+SAVE_PATH = path + "/checkpoint/iteration.5000.ckpt"
 saver.restore(sess, SAVE_PATH)
 
 prev_face = [(0,0,30,30)]

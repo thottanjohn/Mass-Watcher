@@ -10,12 +10,12 @@ def preprocess_input(x, v2=True):
         x = x - 0.5
         x = x * 2.0
     return x
-
+"""
 def _imread(image_name):
         return imread(image_name)
 
 def _imresize(image_array, size):
-        return imresize(image_array, size)
+        return skimage.transform.resize(image_array, size)"""
 
 def to_categorical(integer_classes, num_classes=2):
     integer_classes = np.asarray(integer_classes, dtype='int')
