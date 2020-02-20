@@ -1,8 +1,9 @@
 Steps:-
-conda create --name myenv
+conda create --name myenv python=3.7
 conda activate myenv
-conda install -c menpo opencv3
-conda install keras 
+conda install -c conda-forge opencv
+conda install tensorflow-gpu==1.15
+pip install keras 
 conda install matplotlib
 conda install pandas
 conda install -c conda-forge imageio
