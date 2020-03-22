@@ -3,7 +3,8 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     </head>
     <body>
-        Welcome
+        Welcome<br>
+        <canvas id="canvas" ></canvas>
         <img id="img" alt="abc"/>
         <h4>face coordinates</h4>
         <h4>Emotions</h4>
@@ -13,12 +14,7 @@
 <h4>Attentive</h4>
 <div id="attentive"></div>
 
-    <ol>
 
-    </ol>
-
-
-</div>
         <form method="POST" action="sign_out"> 
             <input type="submit" value="Logout">
         </form>
@@ -39,7 +35,23 @@ setInterval(function(){ $.getJSON( "./FINAL/src/4forces.json", function( data ) 
 $("#attentive").append("</ul>");
 $("#gender").append("</ul>");
 $("#emotions").append("</ul>");
-}); }, 1000);
+function toDataURL(url, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function() {
+    var reader = new FileReader();
+    reader.onloadend = function() {
+      $('img').attr('src',url);
+    }
+    reader.readAsDataURL(xhr.response);
+  };
+  xhr.open('GET', url);
+  xhr.responseType = 'blob';
+  xhr.send();
+}
+
+toDataURL('bgr_img.jpg');
+});
+ }, 1000);
     
 
 
