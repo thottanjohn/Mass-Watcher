@@ -5,7 +5,7 @@ var getEmotion = () => {
     var options = {
         mode: 'text'
     };
-    var pyshell = new PythonShell('./FINAL/src/main.py', options);
+    var pyshell = new PythonShell('./FINAL/src/main_temp.py', options);
     pyshell.on('message', message => console.log(message))
 }
 

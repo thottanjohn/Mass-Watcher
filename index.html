@@ -1,7 +1,47 @@
 <html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    </head>
     <body>
-        Welcome <form method="POST" action="sign_out"> 
+        Welcome
+        <img id="img" alt="abc"/>
+        <h4>face coordinates</h4>
+        <h4>Emotions</h4>
+<div id="emotions"></div>
+<h4>gender</h4>
+<div id="gender"></div>
+<h4>Attentive</h4>
+<div id="attentive"></div>
+
+    <ol>
+
+    </ol>
+
+
+</div>
+        <form method="POST" action="sign_out"> 
             <input type="submit" value="Logout">
         </form>
     </body>
+    <script>
+setInterval(function(){ $.getJSON( "./FINAL/src/4forces.json", function( data ) {
+    $("#attentive").html("");
+    $("#attentive").append("<ul>");
+    $("#gender").html("");
+    $("#gender").append("<ul>");
+    $("#emotions").html("");
+    $("#emotions").append("<ul>");
+    for (index = 0; index < data.length; index++) { 
+        $("#emotions").append("<li>"+data[index]['emotion']+"</li>") ;
+        $("#attentive").append("<li>"+data[index]['attentive']+"</li>") ;
+        $("#gender").append("<li>"+data[index]['gender']+"</li>") ;
+} 
+$("#attentive").append("</ul>");
+$("#gender").append("</ul>");
+$("#emotions").append("</ul>");
+}); }, 1000);
+    
+
+
+    </script>
 </html>

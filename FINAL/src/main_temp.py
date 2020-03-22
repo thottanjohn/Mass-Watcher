@@ -1,3 +1,5 @@
+
+#tensorflow -2 code
 from statistics import mode
 
 import cv2
@@ -166,7 +168,8 @@ def atten(eyes,roi_color):
                 attentive = True
         eye_count+=1
         bgr_image = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2BGR)
-        cv2.imshow('window_frame', bgr_image)
+        cv2.imwrite('bgr_img.jpg', bgr_image)
+        #cv2.imshow('window_frame', bgr_image)
     return attentive
 
 
@@ -259,8 +262,6 @@ while True:
         except:
             continue
         gray_face = preprocess_input(gray_face, True)
-        print(gender_window)
-        print(emotion_window)
         gray_face = np.expand_dims(gray_face, 0)
         gray_face = np.expand_dims(gray_face, -1)
         emotion_prediction = emotion_classifier.predict(gray_face)
@@ -303,7 +304,6 @@ while True:
                 color, 0, -45, 1, 1)
         draw_text(face_coordinates, rgb_image, gender_mode,
                 color, 0, -20, 1, 1)
-        #ROHAN'S CODE
         roi_gray = gray_image[y1:y2, x1:x2]
         roi_color = bgr_image[y1:y2, x1:x2]
         eyes = eye_cascade.detectMultiScale(roi_gray)
@@ -323,7 +323,6 @@ while True:
         import json
         import codecs
         with open(path + '4forces.json', 'wb') as f:
-            print('here')
             json.dump(face, codecs.getwriter('utf-8')(f), ensure_ascii=False)
         
     if cv2.waitKey(1) & 0xFF == ord('q'):

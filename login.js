@@ -7,6 +7,7 @@ var app = express();
 const userService = require('./user.service');
 var alert =require('alert-node');
 var VerifyToken = require('./verifytoken');
+const { getEmotion, getPeople} = require('./serivces/python');
 app.use(express.static(path.join(__dirname)));
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/crowdAnalytics',{ useCreateIndex: true,useUnifiedTopology: true, useNewUrlParser: true} );
@@ -16,15 +17,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(VerifyToken);
 
-app.get('/', function(req, res) {
 
-    if(req.userId){
-        res.sendFile(path.join(__dirname + '/login.html'));
-    }else{
-        res.writeHead(301, { "Location": "http://" + req.headers['host'] + "/log" });
-        return res.end();
-    }
-});
 app.get('/home', function(req, res) {
 
     if(req.userId){
@@ -79,5 +72,5 @@ app.post('/register', function(req, res) {
     });
 });
 
-
+getEmotion();
 app.listen(3001, () => console.log(`Server is up on port:3001`));
