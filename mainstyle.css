@@ -1,0 +1,75 @@
+.heading{
+    background-color: black;
+    padding: 0.2em;
+    margin-top: 2px;
+    color:white ;
+}
+.navbr{
+    background-color: gray;
+
+    
+}
+.navb {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    /* padding: .5rem 1rem; */
+    float: right;
+    margin-top: 3px;
+}
+.bton {
+    display: inline-block;
+    font-weight: 400;
+    background: transparent;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    border: solid white 1px;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.topspace{
+    margin-top: 3rem;
+}
+.bt-cl{
+    color: red;
+}
+.img-border{
+    border:solid black 3px;
+    width:22rem
+}
+.sec-head{
+    background-color: grey;
+    font-weight: 900;
+    padding: 1rem 3rem 1rem 1rem;
+    width: fit-content;
+    font-size: medium;
+}
+
+.bold-weight{
+font-weight: 800;
+float: right;
+margin-top: 5rem;
+}
+.green{
+    color:green;
+}
+.bt-space{
+    padding: 2rem;
+}
