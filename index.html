@@ -7,7 +7,9 @@
 <head>
   <link rel="stylesheet" href="mainstyle.css" type="text/css" media="all" /> <!-- Style-CSS --> 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
+  <!--Chart.js-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+  <script src="node_modules/chart.js/dist/Chart.js"></script>
 </head>
     <body>
 
@@ -48,11 +50,11 @@
         <div class="row">
           <div class="col bt-space">
             <h5 class="sec-head">Live Feed</h5>
-            <img id="feed" class="img-border"  alt="Card image cap">
+            <img id="feed" class="img-border"  alt="Image Loading">
             <span class="bold-weight">
-              <p>Status: <span class="green">Running...</span></p>
-              <p>Resolution :1280 x 1024</p>
-              <p>Gpu :  <span class="green">Enabled</span></p>
+              <p id="Status"></p>
+              <p id="Resolution"></p>
+              <p id="gpu"></p>
             </span>
           </div>
           <div class="col bt-space">
@@ -65,12 +67,12 @@
           <div class="col bt-space">
             <h5 class="sec-head">People Count</h5>
        
-            <div id="emotions"></div>
+            <div id="chartContainer" style="height: 300px;" ></div>
 
           </div>
           
           <div class="col bt-space">
-            <h5 class="sec-head">Attention</h5>
+            <h5 class="sec-head">Attentiveness</h5>
             <div id="attentive"></div>
           </div>
         </div>
@@ -90,39 +92,158 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <script>
-      setInterval(function(){ $.getJSON( "./FINAL/src/4forces.json", function( data ) {
+        var time=0;
+        data0={};
+        var dps = []; // dataPoints
+        status=false;
+        var chart = new CanvasJS.Chart("chartContainer", {
+        axisX:{
+          title:"TIme in seconds",
+          interval:5
+        },
+	      axisY: {
+          title:"People Count",
+          includeZero: false,
+          interval: 1
+	      },      
+	      data: [{
+		      type: "line",
+		      dataPoints: dps
+	      }]
+        });
+        $("#Status").html('Status : <span class="red">Not Running</span>');
+        var myImg = document.querySelector("#feed");
+        var realWidth = myImg.clientWidth;
+        var realHeight = myImg.clientHeight;
+        $("#Resolution").html('Resolution :'+ realWidth +' x ' +realHeight);
+        $.getJSON( "./FINAL/src/statusdata.json", function( data ) {
+        if(data['status']){
+          $("#gpu").html('GPU : <span class="green">Enabled</span>');
+        }
+        else{
+        $("#gpu").html('GPU : <span class="red">Disabled</span>');
+        }
+        });
+        setInterval(function(){ $.getJSON( "./FINAL/src/4forces.json", function( data ) {
+          var mcount = 0, fcount = 0;
+          var attenCount = 0, nonAttenCount = 0;
           $("#attentive").html("");
-          $("#attentive").append("<ul>");
           $("#gender").html("");
-          $("#gender").append("<ul>");
+
           $("#emotions").html("");
-          $("#emotions").append("<ul>");
-          for (index = 0; index < data.length; index++) { 
-              $("#emotions").append("<li>"+data[index]['emotion']+"</li>") ;
-              $("#attentive").append("<li>"+data[index]['attentive']+"</li>") ;
-              $("#gender").append("<li>"+data[index]['gender']+"</li>") ;
-      } 
-      $("#attentive").append("</ul>");
-      $("#gender").append("</ul>");
-      $("#emotions").append("</ul>");
-      function toDataURL(url, callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.onload = function() {
-          var reader = new FileReader();
-          reader.onloadend = function() {
-            $('#feed').attr('src',url);
+          if(status){
+            $("#Status").html('Status : <span class="green"> Running</span>');
           }
-          reader.readAsDataURL(xhr.response);
-        };
-        xhr.open('GET', url);
-        xhr.responseType = 'blob';
-        xhr.send();
-      }
+          else{
+            $("#Status").html('Status : <span class="red">Not Running</span>');
+          }
+          for (index = 0; index < data.length; index++) { 
+
+              // attentive-counter
+              if(data[index]['attentive'] == false){
+                nonAttenCount += 1;
+              }
+              // else{
+              //   nonAttenCount += 1;
+              // }
+              // ----------------
+              // man-counter
+              if(data[index]['gender'] == 'man'){
+                mcount = mcount + 1;
+              }
+
+        }
+        attenCount = data.length - nonAttenCount; 
+        fcount = data.length - mcount; // woman-counter
+        var totcount = data.length;
+        var minutes = 1000 * 60;
+        var hours = minutes * 60;
+        var days = hours * 24;
+        var years = days * 365;
+        var date = new Date();
+        //console.log(t);
+
+      //-------------------------------------------------
       
-      toDataURL('bgr_img.jpg');
-      });
-       }, 1000);
-          </script>
+      // Count vs time line graph
+      
+
+        function updateChart(count,dataLength){
+          dps.push({
+			      x: time,
+			      y: totcount
+          });
+          if (dps.length > dataLength) {
+		        dps.shift();
+	        }
+	        chart.render();
+        }
+        updateChart(totcount,20);
+      //-------------------------------------------------
+      // attentiveness bar graph
+        $('<canvas id="barGraph"></canvas>').appendTo($("#attentive"));
+              data1={};
+              data1.labels=["Attentive", "Not-Attentive"];
+              data1.datasets=[
+                 {backgroundColor:["#14e34b","#e30b13"],data: [attenCount, nonAttenCount]}
+              ];
+
+             var ctx = $("#barGraph").get(0).getContext("2d");
+                var myChart = new Chart(ctx, {
+                  type: 'bar',
+                  data: data1,
+                  options: {
+                            legend: {
+                                      display: false
+                            },
+                            scales: {
+                            yAxes: [{
+                              ticks: {
+                     stepSize: 1 // this worked as expected
+                        }
+            }]
+        }
+                  }
+                });
+      // -------------------------------
+      // gender pie-chart
+        $('<canvas id="pieChart"></canvas>').appendTo($("#gender"));
+              data2={};
+              data2.labels=["Male", "Female"];
+              data2.datasets=[
+                 {backgroundColor:["#213ceb","#f562ba"],data: [mcount, fcount]}
+              ];
+
+             var ctx = $("#pieChart").get(0).getContext("2d");
+                var myChart = new Chart(ctx, {
+                  type: 'doughnut',
+                  data: data2,
+                  
+                 });
+    // -----------------------------
+
+        function toDataURL(url, callback) {
+          var xhr = new XMLHttpRequest();
+          xhr.onload = function() {
+            var reader = new FileReader();
+            reader.onloadend = function() {
+              $('#feed').attr('src',url);
+              status=true;
+           }
+            reader.readAsDataURL(xhr.response);
+        };
+          xhr.open('GET', url);
+          xhr.responseType = 'blob';
+          xhr.send();
+        }
+      
+        toDataURL('bgr_img.jpg');
+        });
+        time++;
+        }, 1000);
+     </script>
+
   </body>
 </html>

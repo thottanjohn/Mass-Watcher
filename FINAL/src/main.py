@@ -136,7 +136,7 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 tf.global_variables_initializer().run()
 
 saver = tf.train.Saver()
-SAVE_PATH = path + "/checkpoint/iteration.5000.ckpt"
+SAVE_PATH = path + "/checkpoint/iteration.50000.ckpt"
 saver.restore(sess, SAVE_PATH)
 
 prev_face = [(0,0,30,30)]
@@ -169,7 +169,8 @@ def atten(eyes,roi_color):
                 attentive = True
         eye_count+=1
         bgr_image = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2BGR)
-        cv2.imshow('window_frame', bgr_image)
+        cv2.imwrite('bgr_img.jpg', bgr_image)
+        #cv2.imshow('window_frame', bgr_image)
     return attentive
 
 

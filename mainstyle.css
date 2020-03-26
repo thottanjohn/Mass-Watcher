@@ -52,7 +52,7 @@
 }
 .img-border{
     border:solid black 3px;
-    width:22rem
+    width:26rem
 }
 .sec-head{
     background-color: grey;
@@ -69,6 +69,9 @@ margin-top: 5rem;
 }
 .green{
     color:green;
+}
+.red{
+    color:red;
 }
 .bt-space{
     padding: 2rem;

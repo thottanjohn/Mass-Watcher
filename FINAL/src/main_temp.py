@@ -159,12 +159,10 @@ def atten(eyes,roi_color):
         if eye_count == 2:
             if drowsiness_check_list == [1] * WINDOW_SIZE:
                 print("Face - "+ str(face_count)+ " - Not Attentive",)
-                draw_text(face_coordinates, rgb_image, "Not Attentive",
-                          color, 1, -65, 1, 1)
+                #draw_text(face_coordinates, rgb_image, "Not Attentive",color, 1, -65, 1, 1)
             elif drowsiness_check_list == [0] * WINDOW_SIZE:
                 print("Face - "+ str(face_count)+ " - Attentive")
-                draw_text(face_coordinates, rgb_image, "Attentive",
-                          color, 1, -65, 1, 1)
+                #draw_text(face_coordinates, rgb_image, "Attentive",color, 1, -65, 1, 1)
                 attentive = True
         eye_count+=1
         bgr_image = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2BGR)
@@ -215,8 +213,8 @@ gender_window = []
 
 # starting video streaming
 #cv2.namedWindow('window_frame')
-video_capture = cv2.VideoCapture(1)
-#video_capture = cv2.VideoCapture(0) if no other device selected ,In my case droid cam is device 0.
+#video_capture = cv2.VideoCapture(1)
+video_capture = cv2.VideoCapture(0) #if no other device selected ,In my case droid cam is device 0.
 """while(True):
     # Capture frame-by-frame
     ret, frame = video_capture.read()
@@ -300,10 +298,8 @@ while True:
         color = color.astype(int)
         color = color.tolist()
         draw_bounding_box(face_coordinates, rgb_image, color)
-        draw_text(face_coordinates, rgb_image, emotion_mode,
-                color, 0, -45, 1, 1)
-        draw_text(face_coordinates, rgb_image, gender_mode,
-                color, 0, -20, 1, 1)
+        draw_text(face_coordinates, rgb_image, emotion_mode,color, 0, -45, 1, 1)
+        #draw_text(face_coordinates, rgb_image, gender_mode,color, 0, -20, 1, 1)
         roi_gray = gray_image[y1:y2, x1:x2]
         roi_color = bgr_image[y1:y2, x1:x2]
         eyes = eye_cascade.detectMultiScale(roi_gray)
@@ -320,11 +316,19 @@ while True:
                 cordi += ','+str(cor.item())
         face.append({"face": cordi, "emotion": emotion_text, "gender": gender_text, "attentive": atten(eyes, roi_color)})
         #face2.append({"face": cordi, "attentive": atten(eyes, roi_color)})
+        statusdata =[]
+        if tf.test.is_gpu_available(cuda_only=False, min_cuda_compute_capability=None):
+            status=True
+        else:
+            status=False
+        statusdata.append({"status":status})
+
         import json
         import codecs
         with open(path + '4forces.json', 'wb') as f:
             json.dump(face, codecs.getwriter('utf-8')(f), ensure_ascii=False)
-        
+        with open(path + 'statusdata.json', 'wb') as f:
+            json.dump(statusdata, codecs.getwriter('utf-8')(f), ensure_ascii=False)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         video_capture.release()
         break
