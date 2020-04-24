@@ -119,7 +119,7 @@
         var realHeight = myImg.clientHeight;
         $("#Resolution").html('Resolution :'+ realWidth +' x ' +realHeight);
         $.getJSON( "./FINAL/src/statusdata.json", function( data ) {
-        if(data['status']){
+        if(data[0]['status']){
           $("#gpu").html('GPU : <span class="green">Enabled</span>');
         }
         else{
