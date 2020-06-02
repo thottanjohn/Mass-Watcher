@@ -144,7 +144,7 @@ drowsiness_check_list = [0] * WINDOW_SIZE
 drowsiness_check_idx = 0
 
 def atten(eyes,roi_color):
-    eye_count = 1
+    eye_count = 0
     attentive = False
     global drowsiness_check_idx
     for (ex,ey,ew,eh) in eyes:
@@ -157,7 +157,7 @@ def atten(eyes,roi_color):
         drowsiness_check_list[drowsiness_check_idx%WINDOW_SIZE] = label[0]
         attentiveness=label[0]
         if attentiveness ==True:
-				eye_count+=1
+            eye_count+=1
         """drowsiness_check_idx += 1
         if eye_count == 2:
             if drowsiness_check_list == [1] * WINDOW_SIZE:
