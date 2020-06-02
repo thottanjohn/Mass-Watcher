@@ -155,7 +155,10 @@ def atten(eyes,roi_color):
         input_images = np.divide(input_images, 255.0)
         label = sess.run(tf.argmax(y_conv, 1), feed_dict={keep_prob:1.0, x_tensor:input_images})
         drowsiness_check_list[drowsiness_check_idx%WINDOW_SIZE] = label[0]
-        drowsiness_check_idx += 1
+        attentiveness=label[0]
+        if attentiveness ==True:
+				eye_count+=1
+        """drowsiness_check_idx += 1
         if eye_count == 2:
             if drowsiness_check_list == [1] * WINDOW_SIZE:
                 print("Face - "+ str(face_count)+ " - Not Attentive",)
@@ -164,10 +167,17 @@ def atten(eyes,roi_color):
                 print("Face - "+ str(face_count)+ " - Attentive")
                 #draw_text(face_coordinates, rgb_image, "Attentive",color, 1, -65, 1, 1)
                 attentive = True
-        eye_count+=1
+        eye_count+=1"""
+        
         bgr_image = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2BGR)
         cv2.imwrite('bgr_img.jpg', bgr_image)
         #cv2.imshow('window_frame', bgr_image)
+    if(eye_count>=2):
+        attentive =True
+        print("Face - "+ str(face_count)+ " - Attentive")
+    else:
+        attentive =False
+        print("Face - "+ str(face_count)+ " - Not Attentive",)
     return attentive
 
 

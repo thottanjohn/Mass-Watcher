@@ -149,6 +149,7 @@ def predict():
 			process_this_frame = not process_this_frame
 
 			print(face_names)
+			face_locations =[face_locations]
 			print(face_locations)
 			# Display the results
 			for (top, right, bottom, left), name in zip(face_locations, face_names):
