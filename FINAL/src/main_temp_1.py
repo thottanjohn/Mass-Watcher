@@ -224,7 +224,12 @@ gender_window = []
 # starting video streaming
 #cv2.namedWindow('window_frame')
 #video_capture = cv2.VideoCapture(1)
-video_capture = cv2.VideoCapture(0) #if no other device selected ,In my case droid cam is device 0.
+f = open(os.getcwd()+"/camera.txt", "r")
+prev_camera =int(f.read())
+print(prev_camera)
+video_capture = cv2.VideoCapture(prev_camera )
+f.close()
+ #if no other device selected ,In my case droid cam is device 0.
 """while(True):
     # Capture frame-by-frame
     ret, frame = video_capture.read()
@@ -240,7 +245,6 @@ video_capture = cv2.VideoCapture(0) #if no other device selected ,In my case dro
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 """
-
 
 while True:
     
@@ -339,6 +343,14 @@ while True:
             json.dump(face, codecs.getwriter('utf-8')(f), ensure_ascii=False)
         with open(path + 'statusdata.json', 'wb') as f:
             json.dump(statusdata, codecs.getwriter('utf-8')(f), ensure_ascii=False)
+    f = open(os.getcwd()+"/camera.txt", "r")
+    camera =int(f.read())
+
+    if camera != prev_camera:
+        video_capture.release()
+        prev_camera=camera
+        video_capture = cv2.VideoCapture(prev_camera)
+    f.close()
     if cv2.waitKey(1) & 0xFF == ord('q'):
         video_capture.release()
         break

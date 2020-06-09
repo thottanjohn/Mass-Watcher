@@ -1,7 +1,5 @@
-
 #tensorflow -1 code
 from statistics import mode
-
 import cv2
 from keras.models import load_model
 import numpy as np
@@ -14,11 +12,6 @@ from req.inference import draw_bounding_box
 from req.inference import apply_offsets
 from req.inference import load_detection_model
 from req.preprocessor import preprocess_input
-
-#from numba import jit, cuda 
-
-#---------------------------- ROHAN'S CODE ---------------------------------
-
 import tensorflow as tf
 import sys
 import glob
@@ -33,6 +26,7 @@ face = []
 IM_SIZE = 32
 BATCH_SIZE = 100
 WINDOW_SIZE = 2
+
 
 sess = tf.InteractiveSession()
 def weight_variable(shape):
@@ -68,9 +62,6 @@ b_conv3 = bias_variable([16])
 h_conv3 = tf.nn.relu(conv2d(h_conv2, W_conv3) + b_conv3)
 
 
-"""
-1 pooling
-"""
 h_pool3 = max_pool_2x2(h_conv3)
 
 
@@ -87,9 +78,7 @@ b_conv6 = bias_variable([32])
 h_conv6 = tf.nn.relu(conv2d(h_conv5, W_conv6) + b_conv6)
 
 
-"""
-2 pooling
-"""
+
 h_pool6 = max_pool_2x2(h_conv6)
 
 W_conv7 = weight_variable([5,5,32,64])
@@ -105,9 +94,7 @@ b_conv9 = bias_variable([64])
 h_conv9 = tf.nn.relu(conv2d(h_conv8, W_conv9) + b_conv9)
 
 
-"""
-3 pooling
-"""
+
 h_pool9 = max_pool_2x2(h_conv9)
 h_pool9_flat = tf.reshape(h_pool9, [-1, int((IM_SIZE/8)*(IM_SIZE/8)*64)])
 
@@ -185,9 +172,6 @@ def atten(eyes,roi_color):
 #--------------------------------- END ------------------------------------
 
 
-
-
-# gender_model_path = path+'FINAL/trained_models/gender_model_vgg.hdf5'
 gender_model_path = path + '/../trained_models/gender_model_vgg.hdf5'
 gender_labels = get_labels('imdb')
 
@@ -195,17 +179,9 @@ detection_model_path = path + '/../trained_models/detection_models/haarcascade_f
 emotion_model_path = path + '/../trained_models/16_layer_relu_test.hdf5'
 emotion_labels = get_labels('fer2013')
 
-
-
-# hyper-parameters for bounding boxes shape
 frame_window = 10
 gender_offsets = (30, 60)
 emotion_offsets = (20, 40)
-
-
-# loading models
-
-
 
 face_detection = load_detection_model(detection_model_path)
 emotion_classifier = load_model(emotion_model_path, compile=False)
@@ -214,44 +190,17 @@ gender_classifier = load_model(gender_model_path, compile=False)
 
 
 
-# getting input model shapes for inference
 emotion_target_size = emotion_classifier.input_shape[1:3]
 gender_target_size = gender_classifier.input_shape[1:3]
 
-# starting lists for calculating modes
 emotion_window = []
 gender_window = []
 
-
-# starting video streaming
-#cv2.namedWindow('window_frame')
-video_capture = cv2.VideoCapture(1)
-#video_capture = cv2.VideoCapture(0) if no other device selected ,In my case droid cam is device 0.
-"""while(True):
-    # Capture frame-by-frame
-    ret, frame = video_capture.read()
-    frame = frame.astype('uint8')
-    # Our operations on the frame come here
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-    # Display the resulting frame
-    #cv2.imshow('frame',gray)
-    plt.imshow(frame, cmap = 'gray', interpolation = 'bicubic')
-    plt.xticks([]), plt.yticks([])  # to hide tick values on X and Y axis
-    plt.show()
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-"""
-
-
+f = open(os.getcwd()+"/camera.txt", "r")
+prev_camera =int(f.read())
+f.close()
+video_capture = cv2.VideoCapture(prev_camera )
 while True:
-    
-    testp = path +'3.txt'
-    
-    """if(os.path.exists(testp)):
-        bgr_image = cv2.imread(path+'1.jpg')
-    else:
-        bgr_image = cv2.imread(path+'2.jpg')"""
     ret, frame = video_capture.read()
     bgr_image= frame.astype('uint8')
     gray_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2GRAY)
@@ -344,6 +293,14 @@ while True:
             json.dump(face, codecs.getwriter('utf-8')(f), ensure_ascii=False)
         with open(path + 'statusdata.json', 'wb') as f:
             json.dump(statusdata, codecs.getwriter('utf-8')(f), ensure_ascii=False)
+    f = open(os.getcwd()+"/camera.txt", "r")
+    camera =int(f.read())
+
+    if camera != prev_camera:
+        video_capture.release()
+        prev_camera=camera
+        video_capture = cv2.VideoCapture(prev_camera)
+    f.close()
     if cv2.waitKey(1) & 0xFF == ord('q'):
         video_capture.release()
         break

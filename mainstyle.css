@@ -76,3 +76,8 @@ margin-top: 5rem;
 .bt-space{
     padding: 2rem;
 }
+
+#videosource{
+    border: 1px solid #fff;
+    background-color: transparent;
+}

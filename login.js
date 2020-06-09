@@ -72,5 +72,20 @@ app.post('/register', function(req, res) {
     });
 });
 
+
+app.post('/camera', function(req, res) {
+
+    const fs = require('fs')
+
+    const content = req.body.name;
+    
+    fs.writeFile('camera.txt', content, (err) => {
+      if (err) {
+        console.error(err)
+        return
+      }
+      //file written successfully
+    })
+});
 getEmotion();
 app.listen(3001, () => console.log(`Server is up on port:3001`));
