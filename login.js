@@ -4,9 +4,9 @@ var path = require('path');
 const mongoose = require('mongoose');
 const cors = require('cors');
 var app = express();
-const userService = require('./user.service');
+const userService = require('./nodejs/user.service');
 var alert =require('alert-node');
-var VerifyToken = require('./verifytoken');
+var VerifyToken = require('./nodejs/verifytoken');
 const { getEmotion, getPeople} = require('./serivces/python');
 app.use(express.static(path.join(__dirname)));
 mongoose.Promise = global.Promise;
@@ -21,7 +21,7 @@ app.use(VerifyToken);
 app.get('/home', function(req, res) {
 
     if(req.userId){
-        res.sendFile(path.join(__dirname + '/index.html'));
+        res.sendFile(path.join(__dirname + '/static/templates/index.html'));
     }else{
         res.writeHead(301, { "Location": "http://" + req.headers['host'] + "/log" });
         return res.end();
@@ -39,7 +39,7 @@ app.get('/log', function(req, res) {
         res.writeHead(301, { "Location": "http://" + req.headers['host'] + "/home" });
         return res.end();
     }else{
-        res.sendFile(path.join(__dirname + '/login.html'));
+        res.sendFile(path.join(__dirname + '/static/templates/login.html'));
     }
 
 
@@ -50,7 +50,7 @@ app.get('/register', function(req, res) {
         res.writeHead(301, { "Location": "http://" + req.headers['host'] + "/home" });
         return res.end();
     }else{
-        res.sendFile(path.join(__dirname + '/registration_form.html'));
+        res.sendFile(path.join(__dirname + '/static/templates/registration_form.html'));
     }
 
 

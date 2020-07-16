@@ -139,6 +139,7 @@ while True:
     else:
         bgr_image = cv2.imread(path+'2.jpg')"""
     ret, frame = video_capture.read()
+    #frame= cv2.imread(os.getcwd()+'/IMG-20200312-WA0282.jpg')
     bgr_image= frame.astype('uint8')
     gray_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2GRAY)
     rgb_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2RGB)
