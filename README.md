@@ -1,6 +1,6 @@
 Mass Watcher
 
-Application to create live streaming crowd analytics data which will include
+Application to create live streaming crowd analytics data which will include using node js backend and tensorflow for Deep Learning networks
 1. People Count - Number of people in the given crowd
 2. Attnetiveness - Attentineveness of each of the people in the crowd.
 3. Emotion Capture  - Emotion of each person in the crowd like sad,happy,angry etc.
